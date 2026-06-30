@@ -135,6 +135,7 @@ If any check fails → stop and resolve it first.
 | `ai-dlc/discovery/discovery-report.md` | Discovery findings |
 | `ai-dlc/ops/build/backlog.md` | Live bolt status tracker |
 | `ai-dlc/rules/architecture.md` | Architecture decisions |
+| `ai-dlc/rules/infrastructure.md` | Infrastructure & deployment (placeholder until cloud provider is chosen) |
 | `ai-dlc/rules/code-standards.md` | Coding conventions |
 | `ai-dlc/rules/security.md` | Security rules |
 | `ai-dlc/guidelines/domain-glossary.md` | Business terms |
