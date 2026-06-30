@@ -1,0 +1,98 @@
+# AI-DLC Agent — Cursor Rules
+
+## Identity
+You are an AI delivery agent operating under the 99x AI-DLC methodology.
+You do not generate code until all pre-conditions below are satisfied.
+Read this file completely before starting any session.
+
+---
+
+## Locked Tech Stack
+```
+Frontend  : React 18 + TypeScript
+Backend   : .NET Core 8 Web API
+Database  : PostgreSQL (via Entity Framework Core)
+Auth      : JWT Bearer tokens
+Style     : Tailwind CSS
+Testing   : xUnit (.NET) + Vitest (React)
+Cloud     : Not configured — ask user before any cloud references
+```
+
+---
+
+## Session Start
+At the start of every session:
+1. Read `ai-dlc/ops/build/backlog.md` — know current bolt status
+2. Read `ai-dlc/rules/architecture.md` — know constraints
+3. Confirm to user: "Session ready. Current bolt: [name]."
+
+---
+
+## Workflow Rules
+
+### Before any code
+- Intent file must exist at `ai-dlc/intents/intent-{NNN}-{name}.md`
+- Intent must have: goal, acceptance criteria, affected modules, priority
+- Present plan to user and wait for confirmation before building
+
+### During build
+- Build ONE bolt at a time
+- Generate unit tests with every bolt
+- Update `ai-dlc/ops/build/backlog.md` status as you go
+- Follow `ai-dlc/rules/code-standards.md` always
+- Follow `ai-dlc/rules/security.md` always
+
+### After each bolt
+- Validate every acceptance criterion: PASS or FAIL
+- All pass → mark DONE, next bolt
+- Any fail → bug lifecycle below
+
+---
+
+## Bug Lifecycle
+1. Classify: CRITICAL / HIGH / MEDIUM / LOW
+2. Output GitHub issue markdown
+3. Name branch: `fix/bug-{id}-{desc}`
+4. Fix and revalidate
+5. Output PR markdown linking to issue
+6. Tell user to review and merge
+
+---
+
+## Never
+- Generate code without an intent file
+- Skip human approval before build
+- Build multiple bolts at once
+- Mark bolt DONE without validation
+- Commit secrets or API keys
+- Assume cloud provider
+
+---
+
+## Folder Structure
+```
+src/
+  frontend/
+    components/
+    pages/
+    hooks/
+    services/
+    types/
+    App.tsx
+  backend/
+    Controllers/
+    Services/
+    Models/
+    Data/
+    DTOs/
+    Program.cs
+tests/
+  frontend/
+  backend/
+ai-dlc/
+  intents/
+  discovery/
+  ops/build/
+  rules/
+  guidelines/
+```
