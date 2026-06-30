@@ -12,6 +12,74 @@ GitHub issue + PR lifecycle.
 
 ---
 
+## Workflow Pattern
+```
+┌─────────────────────────────────────┐
+│         INTAKE LAYER                │
+│  User submits requirements          │
+│  ai-dlc requirement gathering       │
+└──────────────┬──────────────────────┘
+               ↓
+┌─────────────────────────────────────┐
+│         DISCOVERY LAYER             │
+│  Check Jira / GitHub / Figma        │
+│  Detect conflicts between sources   │
+│  Map existing vs missing work       │
+└──────────────┬──────────────────────┘
+               ↓
+┌─────────────────────────────────────┐
+│         REASONING LAYER             │
+│  Decide Mode 1 or Mode 2            │
+│  Choose tech stack                  │
+│  Create feature breakdown (Bolts)   │
+│  Write plan to memory file          │
+└──────────────┬──────────────────────┘
+               ↓
+┌─────────────────────────────────────┐
+│      HUMAN APPROVAL CHECKPOINT  👤  │
+│  Show plan to user                  │
+│  User approves / adjusts            │
+└──────────────┬──────────────────────┘
+               ↓
+┌─────────────────────────────────────┐
+│         BUILD LAYER                 │
+│  Build feature by feature (Bolts)   │
+│  Generate tests alongside code      │
+│  Validate against acceptance criteria│
+│  Error recovery if build fails      │
+└──────────────┬──────────────────────┘
+               ↓
+┌─────────────────────────────────────┐
+│         AUDIT LAYER                 │
+│  Log every decision made            │
+│  Track what was built vs planned    │
+│  Feed failures back as new rules    │
+└─────────────────────────────────────┘
+```
+
+---
+
+## Architecture
+```
+┌─────────────────────────────────┐
+│  Frontend: React 18 + TypeScript │
+│  Styling:  Tailwind CSS          │
+│  State:    React Context / hooks │
+└────────────────┬────────────────┘
+                 │ HTTP / REST
+┌────────────────▼────────────────┐
+│  Backend: .NET Core 8 Web API   │
+│  Auth:    JWT Bearer            │
+│  ORM:     Entity Framework Core │
+└────────────────┬────────────────┘
+                 │
+┌────────────────▼────────────────┐
+│  Database: PostgreSQL            │
+└─────────────────────────────────┘
+```
+
+---
+
 ## Tech Stack
 | Layer | Technology |
 |-------|-----------|
