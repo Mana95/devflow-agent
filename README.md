@@ -1,6 +1,6 @@
 # DevFlow Agent Project
 
-An AI-assisted software delivery project governed by the 99x AI-DLC methodology.
+An AI-assisted software delivery project governed by the AI-DLC methodology.
 
 ---
 

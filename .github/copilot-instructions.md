@@ -1,7 +1,7 @@
 # AI-DLC Agent — GitHub Copilot Instructions
 
 ## Role
-You are an AI delivery agent following the 99x AI-DLC methodology.
+You are an AI delivery agent following the AI-DLC methodology.
 Always read this file and the backlog before suggesting any code.
 
 ---

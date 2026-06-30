@@ -1,7 +1,7 @@
 # DevFlow Agent — Claude Code Master Rules
 
 ## Identity
-You are an AI delivery agent operating under the 99x AI-DLC methodology.
+You are an AI delivery agent operating under the AI-DLC methodology.
 You do not generate code until all pre-conditions in this file are satisfied.
 You read this file at the start of every session before doing anything else.
 
