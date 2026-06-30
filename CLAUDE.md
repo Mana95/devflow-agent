@@ -17,7 +17,7 @@ Database  : PostgreSQL (via Entity Framework Core)
 Auth      : JWT Bearer tokens
 Cloud     : Not configured yet — ask user before any cloud references
 Style     : Tailwind CSS
-Testing   : xUnit (.NET) + Vitest (React)
+Testing   : xUnit (.NET) + Vitest (React) + Playwright (E2E)
 ```
 
 ---
@@ -36,8 +36,12 @@ Do NOT skip this. Do NOT start coding without completing steps 1-4.
 
 ### Phase 1: Intake
 - When the user gives a new requirement, read `ai-dlc/intents/` for existing intents
+- If the user provides a Jira ticket / GitHub issue / epic reference instead of a free-text requirement:
+  a. Pull the ticket's title, description, and acceptance criteria (ask the user to paste them if no live source is connected)
+  b. If it is an epic spanning multiple features, split it into one intent per feature — do NOT create one giant intent for an epic
+  c. Each resulting intent must link back to the source ticket ID in its header
 - If no matching intent exists, create one at `ai-dlc/intents/intent-{NNN}-{name}.md`
-- Every intent MUST have: goal, acceptance criteria, affected modules, priority
+- Every intent MUST have: goal, acceptance criteria, affected modules, priority, source ticket (if any)
 - Do NOT proceed to build until the intent file exists
 
 ### Phase 2: Discovery
@@ -48,8 +52,9 @@ Do NOT skip this. Do NOT start coding without completing steps 1-4.
 - Document mode decision in discovery report
 
 ### Phase 3: Reasoning
-- Break the intent into bolts (smallest deployable units of work)
-- Add bolts to `ai-dlc/ops/build/backlog.md` with status PENDING
+- Break the intent into bolts (smallest deployable units of work) — these are the "subtasks" of the source ticket/epic
+- Add bolts to `ai-dlc/ops/build/backlog.md` with status PENDING, each tagged with its parent intent/ticket
+- Check `ai-dlc/guidelines/domain-glossary.md` and `ai-dlc/guidelines/skill-base.md` before designing any business logic — reuse existing terms/skills, do not redefine them
 - Choose appropriate tech stack components from locked decisions above
 - Write any new architectural decisions to `ai-dlc/rules/architecture.md`
 
@@ -66,9 +71,11 @@ Do NOT skip this. Do NOT start coding without completing steps 1-4.
 - Build one bolt at a time
 - For each bolt:
   a. State which bolt you are starting
-  b. Generate the code
-  c. Generate unit tests alongside the code
-  d. Update bolt status in backlog.md to IN PROGRESS then DONE
+  b. Write a test plan first: list the scenarios to cover (happy path, edge cases, failure cases) mapped to the bolt's acceptance criteria
+  c. Generate the code
+  d. Generate unit tests alongside the code (xUnit for backend, Vitest for frontend)
+  e. Generate Playwright E2E tests for any bolt that touches a user-facing flow (UI + API together)
+  f. Update bolt status in backlog.md to IN PROGRESS then DONE
 - Follow all rules in `ai-dlc/rules/code-standards.md`
 - Follow all rules in `ai-dlc/rules/security.md`
 
@@ -163,6 +170,7 @@ src/
 tests/
   frontend/         ← Vitest tests
   backend/          ← xUnit tests
+  e2e/              ← Playwright test plans + specs
 ```
 
 ---

@@ -6,9 +6,19 @@ An AI-assisted software delivery project governed by the AI-DLC methodology.
 
 ## What This Is
 This project is built by an AI agent (Claude Code / Cursor / GitHub Copilot) following
-a strict intent-driven delivery process. Every feature starts with a written intent,
-every bolt is validated against acceptance criteria, and every bug triggers a full
-GitHub issue + PR lifecycle.
+a strict intent-driven delivery process.
+
+Given a Jira ticket, GitHub issue, or epic, the agent:
+1. **Intakes** the ticket and, if it's an epic, splits it into individual feature intents (subtasks)
+2. **Discovers** existing related work across Jira / GitHub / Figma / the codebase before building anything new
+3. **Reasons** about the breakdown into bolts (smallest deployable units), checking the domain glossary and skill base so business logic stays consistent
+4. **Waits for human approval** of the plan before writing any code
+5. **Builds** one bolt at a time — writing a test plan first, then the code, then unit tests (xUnit / Vitest) and Playwright E2E tests for user-facing flows
+6. **Validates** every bolt against its acceptance criteria
+7. **Handles bugs** end-to-end — classifying severity, opening a GitHub issue, fixing on a branch, and raising a PR for review
+
+Nothing is marked done without passing validation, and no code is written before the
+plan is approved.
 
 ---
 
@@ -87,7 +97,7 @@ GitHub issue + PR lifecycle.
 | Backend | .NET Core 8 Web API |
 | Database | PostgreSQL + Entity Framework Core |
 | Auth | JWT Bearer tokens |
-| Tests | xUnit (backend) + Vitest (frontend) |
+| Tests | xUnit (backend) + Vitest (frontend) + Playwright (E2E) |
 
 ---
 

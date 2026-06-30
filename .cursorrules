@@ -14,7 +14,7 @@ Backend   : .NET Core 8 Web API
 Database  : PostgreSQL (via Entity Framework Core)
 Auth      : JWT Bearer tokens
 Style     : Tailwind CSS
-Testing   : xUnit (.NET) + Vitest (React)
+Testing   : xUnit (.NET) + Vitest (React) + Playwright (E2E)
 Cloud     : Not configured — ask user before any cloud references
 ```
 
@@ -37,7 +37,8 @@ At the start of every session:
 
 ### During build
 - Build ONE bolt at a time
-- Generate unit tests with every bolt
+- Write a test plan (scenarios) before writing code
+- Generate unit tests with every bolt; add Playwright E2E tests for user-facing flows
 - Update `ai-dlc/ops/build/backlog.md` status as you go
 - Follow `ai-dlc/rules/code-standards.md` always
 - Follow `ai-dlc/rules/security.md` always
@@ -89,6 +90,7 @@ src/
 tests/
   frontend/
   backend/
+  e2e/
 ai-dlc/
   intents/
   discovery/

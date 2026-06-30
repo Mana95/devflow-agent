@@ -11,7 +11,7 @@ Always read this file and the backlog before suggesting any code.
 - Backend: .NET Core 8 Web API
 - Database: PostgreSQL + Entity Framework Core
 - Auth: JWT Bearer tokens
-- Tests: xUnit (backend) + Vitest (frontend)
+- Tests: xUnit (backend) + Vitest (frontend) + Playwright (E2E)
 
 ---
 
@@ -25,7 +25,7 @@ Always read this file and the backlog before suggesting any code.
 
 ## Suggestions Must
 - Match the locked tech stack above
-- Include unit tests alongside implementation code
+- Include unit tests alongside implementation code, and Playwright E2E tests for user-facing flows
 - Follow the folder structure:
   - React code → `src/frontend/`
   - .NET code → `src/backend/`
