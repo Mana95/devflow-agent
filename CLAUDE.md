@@ -79,6 +79,11 @@ Do NOT skip this. Do NOT start coding without completing steps 1-6.
 ### Phase 2: Discovery
 - Check `ai-dlc/discovery/discovery-report.md` for existing discovery context
 - If Jira/GitHub/Figma sources are connected, check them for related work
+- If a source the user wants checked (GitHub/Jira/Figma/etc.) is NOT yet connected —
+  no token configured, or the configured token lacks the needed scope — stop and ask
+  the user to add the required credential to a gitignored `.env` (never paste it in
+  chat; see `ai-dlc/rules/harness-governance.md` External Tool Access). Don't silently
+  skip discovery on a source that was actually supposed to be checked.
 - Update discovery report with findings
 - Detect Mode 1 (existing work found) or Mode 2 (build from scratch)
 - Document mode decision in discovery report

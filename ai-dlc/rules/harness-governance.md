@@ -26,12 +26,18 @@ happens explicitly, every time, before Phase 5 starts.
 
 ---
 
-## External Tool Access (GitHub, Jira, etc.)
+## External Tool Access (GitHub, Jira, Figma, etc.)
 
 - Prefer an authenticated CLI (`gh`) or an MCP connector over raw `curl` + a manually
   pasted token. Raw `curl` calls with an inline token are error-prone (easy to leak via
   chat, easy to typo a scope) and were only used because neither `gh` nor a GitHub MCP
   was available in-session.
+- Before starting Discovery (Phase 2) on any source (GitHub/Jira/Figma), check whether
+  a working credential already exists (env var set, `gh auth status`, MCP connector
+  connected). If it doesn't — or it exists but lacks the scope needed (e.g. a GitHub
+  token with `project` scope but not `repo`, which cannot create issues) — stop and ask
+  the user to add/update the credential in a gitignored `.env` before proceeding on
+  that source. Don't guess at scopes and don't skip the source silently.
 - If a user pastes a live token/credential directly into chat, treat it as compromised
   immediately: tell them to revoke it, do not use it, and wait for a replacement placed
   directly into a gitignored file instead.
