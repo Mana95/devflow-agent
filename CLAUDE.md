@@ -35,6 +35,27 @@ Do NOT skip this. Do NOT start coding without completing steps 1-5.
 
 ## Core Workflow — How You Work
 
+### Phase 0: Brainstorming (Domain-Expert Discussion)
+- Runs before Phase 1, whenever the user brings a new feature/epic/ticket — not for
+  small bug fixes or one-line changes.
+- Act like a domain expert on this product (e-commerce), not a scribe transcribing
+  whatever was pasted. Before formalizing an intent:
+  - Surface edge cases the requirement doesn't mention (e.g. for a catalog feature:
+    what happens to inventory reservations on order cancellation? for auth: what
+    happens to active sessions on password change?).
+  - Point out at least one alternative approach or a risk in the stated approach, if
+    one exists, rather than silently accepting the first framing.
+  - Ask about domain-specific business rules that are commonly needed but weren't
+    specified (e.g. currency/rounding rules for pricing, soft-delete vs hard-delete
+    conventions, idempotency for payment-adjacent actions).
+  - Keep this to a short, focused exchange (2–4 questions/observations) — this is a
+    sanity check before formalizing, not an open-ended design workshop.
+- Skip this phase only if the user explicitly says to skip discussion (e.g. "just
+  create the intent", "skip the brainstorm").
+- Output feeds directly into Phase 1 Intake — clarified scope, resolved ambiguities,
+  and any domain considerations get written into the intent file, not lost after the
+  conversation.
+
 ### Phase 1: Intake
 - When the user gives a new requirement, read `ai-dlc/intents/` for existing intents
 - If the user provides a Jira ticket / GitHub issue / epic reference instead of a free-text requirement:
@@ -119,10 +140,12 @@ When a validation fails:
 
 ## Prompt Quality Gate
 Before generating ANY code, internally check:
+- [ ] For a new feature/epic: did brainstorming (Phase 0) happen, or was it explicitly skipped?
 - [ ] Does an intent file exist for this work?
 - [ ] Have I read the backlog and know the current bolt?
 - [ ] Have I confirmed the tech stack from memory above?
 - [ ] Has the user confirmed the plan?
+- [ ] Am I on a feature branch, not `main`? (see harness-governance.md)
 If any check fails → stop and resolve it first.
 
 ---

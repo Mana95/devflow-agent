@@ -8,6 +8,31 @@
 
 ---
 
+## Design & Maintainability
+These apply across both stacks — the goal is code a professional engineering team
+would accept in review, not just code that works.
+
+- **Single Responsibility** — a class/function does one thing. If a service method
+  needs "and" to describe it (e.g. "validates and sends email and logs"), split it.
+- **Depend on abstractions, not concretions** — controllers/services take interfaces
+  via constructor injection (`IProductService`, not `ProductService` directly), so
+  implementations can be swapped/mocked without touching callers.
+- **No magic numbers or strings** — extract repeated literals (status codes, config
+  keys, business thresholds like "8 char minimum") into named constants or config,
+  not inline literals scattered across files.
+- **Null-safety is explicit** — nullable reference types stay on (.NET) and are
+  respected, not suppressed with `!` except where a preceding check already proves
+  non-null. TypeScript: no `any` to bypass a type error — fix the type instead.
+- **Async all the way down** — never block on async code (no `.Result`/`.Wait()` in
+  .NET, no unnecessarily-sync wrappers around promises in TS). If a method awaits
+  anything, it is itself `async`.
+- **Small, composable functions over deep nesting** — prefer early returns / guard
+  clauses over multiple levels of nested `if`.
+- **Favor composition over inheritance** — extend behavior via injected
+  services/hooks, not deep class hierarchies or prop-drilled component inheritance.
+
+---
+
 ## .NET Core (Backend)
 
 ### Naming
