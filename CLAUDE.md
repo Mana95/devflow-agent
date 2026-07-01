@@ -27,8 +27,9 @@ At the start of EVERY session, you must:
 1. Read this file completely
 2. Read `ai-dlc/ops/build/backlog.md` to know current bolt status
 3. Read `ai-dlc/rules/architecture.md` for architectural constraints
-4. Say: "Session ready. Current bolt: [bolt name]. What would you like to do?"
-Do NOT skip this. Do NOT start coding without completing steps 1-4.
+4. Read `ai-dlc/rules/harness-governance.md` for agent operating rules (branching discipline, tool access, CI, lint gates)
+5. Say: "Session ready. Current bolt: [bolt name]. What would you like to do?"
+Do NOT skip this. Do NOT start coding without completing steps 1-5.
 
 ---
 
@@ -68,6 +69,7 @@ Do NOT skip this. Do NOT start coding without completing steps 1-4.
 - Do NOT start building without this confirmation
 
 ### Phase 5: Build
+- Before writing any bolt code: confirm you are on a `feature/{intent-id}-{short-desc}` branch, not `main`. If not, create it first and commit any pending intake artifacts to it. See `ai-dlc/rules/harness-governance.md` (Branch-Before-Build).
 - Build one bolt at a time
 - For each bolt:
   a. State which bolt you are starting
@@ -82,7 +84,12 @@ Do NOT skip this. Do NOT start coding without completing steps 1-4.
 ### Phase 6: Validation
 - After each bolt, validate against the acceptance criteria in the intent file
 - Run through each criterion explicitly: PASS or FAIL
-- If ALL pass → mark bolt DONE in backlog, move to next bolt
+- Automated tests are the required verification method:
+  - Backend: xUnit suite must pass
+  - Frontend: Vitest suite must pass
+  - User-facing flows: Playwright E2E must pass — this is what satisfies "verify it actually works," not a manual click-through
+- Manual browser testing is OPTIONAL — use it for a quick sanity check or to debug a failing Playwright test, but a bolt is not blocked on it. Do not require a live dev server + manual click-through before marking a UI bolt DONE if Playwright coverage already exists for that flow.
+- If ALL required checks pass → mark bolt DONE in backlog, move to next bolt
 - If ANY fail → trigger bug lifecycle (see below)
 
 ### Phase 7: Bug Lifecycle
@@ -142,6 +149,7 @@ If any check fails → stop and resolve it first.
 | `ai-dlc/discovery/discovery-report.md` | Discovery findings |
 | `ai-dlc/ops/build/backlog.md` | Live bolt status tracker |
 | `ai-dlc/rules/architecture.md` | Architecture decisions |
+| `ai-dlc/rules/harness-governance.md` | Agent operating rules: branching discipline, external tool access, CI, lint gates |
 | `ai-dlc/rules/infrastructure.md` | Infrastructure & deployment (placeholder until cloud provider is chosen) |
 | `ai-dlc/rules/code-standards.md` | Coding conventions |
 | `ai-dlc/rules/security.md` | Security rules |

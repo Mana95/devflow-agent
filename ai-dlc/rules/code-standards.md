@@ -69,6 +69,18 @@
 - Shared state → React Context
 - Do not use global state libraries unless explicitly approved
 
+### UI / Style
+- Follow modern UI design conventions: consistent spacing scale, clear typographic
+  hierarchy, accessible color contrast, responsive layout — do not ship a raw/unstyled
+  HTML-forms look for user-facing pages.
+- Never put placeholder or AI-generated-sounding text into shipped UI copy — no
+  "AI Generated Title", no lorem ipsum, no meta-references to the content being
+  generated. Titles, labels, and copy must read like real product copy a human product
+  team would write for that specific feature (e.g. "Create account", not "Page Title" or
+  "AI Generated Heading").
+- If a real title/label isn't known yet, ask the user or infer one from the feature's
+  actual purpose — do not leave a generic placeholder in committed code.
+
 ---
 
 ## Testing
