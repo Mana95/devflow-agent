@@ -8,7 +8,11 @@ You read this file at the start of every session before doing anything else.
 ---
 
 ## Memory — Locked Decisions
-These decisions are final. Do not re-ask the user about these unless they explicitly say "reset stack".
+These decisions are final for **this** project. Do not re-ask the user about these
+unless they explicitly say "reset stack". If you are being pointed at a *different*
+existing codebase that doesn't already have this file, do NOT assume this stack
+applies there — see Project State Check below and
+`ai-dlc/guidelines/existing-project-setup.md`.
 
 ```
 Frontend  : React 18 + TypeScript
@@ -24,12 +28,18 @@ Testing   : xUnit (.NET) + Vitest (React) + Playwright (E2E)
 
 ## Session Start Protocol
 At the start of EVERY session, you must:
+
 1. Read this file completely
-2. Read `ai-dlc/ops/build/backlog.md` to know current bolt status
-3. Read `ai-dlc/rules/architecture.md` for architectural constraints
-4. Read `ai-dlc/rules/harness-governance.md` for agent operating rules (branching discipline, tool access, CI, lint gates)
-5. Say: "Session ready. Current bolt: [bolt name]. What would you like to do?"
-Do NOT skip this. Do NOT start coding without completing steps 1-5.
+2. **Project State Check** — determine which situation you're in before anything else:
+   - **A. Fresh project** — no source code exists yet, and `ai-dlc/` is empty/templated. Proceed normally: locked decisions above apply, scaffold code as intents get built.
+   - **B. Existing project, AI-DLC already configured** — `ai-dlc/` exists and is populated (backlog has entries, architecture.md reflects a real stack). This is the normal repeat-session case. Proceed to step 3.
+   - **C. Existing project, AI-DLC NOT yet configured** — real application code already exists (check for `.csproj`/`package.json`/other manifest files, existing `src/` structure) but there is no `ai-dlc/` folder, or it's still the empty template. **Do not proceed to Phase 0/1.** Instead, run the onboarding flow in `ai-dlc/guidelines/existing-project-setup.md` first: analyze the actual existing stack/conventions, populate `ai-dlc/rules/architecture.md` and this file's Memory block from what's really there (never copy this project's locked stack onto a different one), then scaffold the rest of `ai-dlc/`.
+   - If unsure which situation applies, ask the user rather than guessing — the wrong assumption here (e.g. treating an existing legacy codebase as greenfield) cascades into every later phase.
+3. Read `ai-dlc/ops/build/backlog.md` to know current bolt status
+4. Read `ai-dlc/rules/architecture.md` for architectural constraints
+5. Read `ai-dlc/rules/harness-governance.md` for agent operating rules (branching discipline, tool access, CI, lint gates)
+6. Say: "Session ready. Current bolt: [bolt name]. What would you like to do?" (situation A/B) — or, for situation C, summarize the onboarding plan and ask for confirmation before scaffolding anything.
+Do NOT skip this. Do NOT start coding without completing steps 1-6.
 
 ---
 
@@ -69,6 +79,11 @@ Do NOT skip this. Do NOT start coding without completing steps 1-5.
 ### Phase 2: Discovery
 - Check `ai-dlc/discovery/discovery-report.md` for existing discovery context
 - If Jira/GitHub/Figma sources are connected, check them for related work
+- If a source the user wants checked (GitHub/Jira/Figma/etc.) is NOT yet connected —
+  no token configured, or the configured token lacks the needed scope — stop and ask
+  the user to add the required credential to a gitignored `.env` (never paste it in
+  chat; see `ai-dlc/rules/harness-governance.md` External Tool Access). Don't silently
+  skip discovery on a source that was actually supposed to be checked.
 - Update discovery report with findings
 - Detect Mode 1 (existing work found) or Mode 2 (build from scratch)
 - Document mode decision in discovery report
@@ -173,6 +188,7 @@ If any check fails → stop and resolve it first.
 | `ai-dlc/ops/build/backlog.md` | Live bolt status tracker |
 | `ai-dlc/rules/architecture.md` | Architecture decisions |
 | `ai-dlc/rules/harness-governance.md` | Agent operating rules: branching discipline, external tool access, CI, lint gates |
+| `ai-dlc/guidelines/existing-project-setup.md` | How to configure AI-DLC on a pre-existing codebase (situation C) |
 | `ai-dlc/rules/infrastructure.md` | Infrastructure & deployment (placeholder until cloud provider is chosen) |
 | `ai-dlc/rules/code-standards.md` | Coding conventions |
 | `ai-dlc/rules/security.md` | Security rules |

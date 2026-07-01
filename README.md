@@ -120,6 +120,16 @@ numbers, explicit null-safety) — see `ai-dlc/rules/harness-governance.md` and
 - Claude Code → reads `CLAUDE.md` automatically
 - Cursor → reads `.cursorrules` automatically
 - GitHub Copilot → reads `.github/copilot-instructions.md` automatically
+- The agent first checks whether this is a fresh project, an existing project already
+  configured for AI-DLC, or an existing codebase that hasn't been onboarded yet — see
+  "Session Start Protocol" in `CLAUDE.md`.
+
+### Attaching this to an existing codebase
+This repo's `CLAUDE.md` is written for *this* project's stack — don't copy it verbatim
+onto a different, pre-existing codebase. Instead see
+`ai-dlc/guidelines/existing-project-setup.md`, which walks through detecting the real
+stack/conventions already in use and scaffolding `ai-dlc/` from that, rather than
+assuming a greenfield stack.
 
 ### Adding a new feature
 1. Describe the feature/epic to the agent (free text, or a ticket link) — it will
