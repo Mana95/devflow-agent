@@ -9,21 +9,34 @@ This project is built by an AI agent (Claude Code / Cursor / GitHub Copilot) fol
 a strict intent-driven delivery process.
 
 Given a Jira ticket, GitHub issue, or epic, the agent:
+0. **Brainstorms** the feature as a domain expert first — surfacing edge cases,
+   alternative approaches, and commonly-needed business rules the requirement didn't
+   mention, rather than transcribing whatever was pasted (skippable on request)
 1. **Intakes** the ticket and, if it's an epic, splits it into individual feature intents (subtasks)
 2. **Discovers** existing related work across Jira / GitHub / Figma / the codebase before building anything new
 3. **Reasons** about the breakdown into bolts (smallest deployable units), checking the domain glossary and skill base so business logic stays consistent
 4. **Waits for human approval** of the plan before writing any code
 5. **Builds** one bolt at a time — writing a test plan first, then the code, then unit tests (xUnit / Vitest) and Playwright E2E tests for user-facing flows
-6. **Validates** every bolt against its acceptance criteria
+6. **Validates** every bolt against its acceptance criteria — automated tests (xUnit / Vitest / Playwright) are the required gate; manual browser testing is optional
 7. **Handles bugs** end-to-end — classifying severity, opening a GitHub issue, fixing on a branch, and raising a PR for review
 
 Nothing is marked done without passing validation, and no code is written before the
-plan is approved.
+plan is approved. The agent also follows explicit branch-before-build discipline and a
+set of professional-team code-design standards (SOLID, DI via interfaces, no magic
+numbers, explicit null-safety) — see `ai-dlc/rules/harness-governance.md` and
+`ai-dlc/rules/code-standards.md`.
 
 ---
 
 ## Workflow Pattern
 ```
+┌─────────────────────────────────────┐
+│      BRAINSTORMING LAYER            │
+│  Domain-expert discussion           │
+│  Edge cases, alternatives, risks    │
+│  (skippable on explicit request)    │
+└──────────────┬──────────────────────┘
+               ↓
 ┌─────────────────────────────────────┐
 │         INTAKE LAYER                │
 │  User submits requirements          │
@@ -109,8 +122,10 @@ plan is approved.
 - GitHub Copilot → reads `.github/copilot-instructions.md` automatically
 
 ### Adding a new feature
-1. Create an intent file: `ai-dlc/intents/intent-{NNN}-{name}.md`
-2. Fill in goal + acceptance criteria
+1. Describe the feature/epic to the agent (free text, or a ticket link) — it will
+   brainstorm domain edge cases and open questions with you first (say "skip the
+   brainstorm" to bypass this)
+2. Agent creates an intent file: `ai-dlc/intents/intent-{NNN}-{name}.md` with goal + acceptance criteria
 3. Tell the agent: "Read intent-{NNN} and plan the bolts"
 4. Agent presents plan — confirm to start build
 
@@ -131,8 +146,11 @@ plan is approved.
 | `.github/copilot-instructions.md` | Agent rules for GitHub Copilot |
 | `ai-dlc/ops/build/backlog.md` | Live bolt tracker |
 | `ai-dlc/rules/architecture.md` | Architecture decisions |
-| `ai-dlc/rules/code-standards.md` | Coding conventions |
+| `ai-dlc/rules/harness-governance.md` | Agent operating rules — branching discipline, external tool access, CI, lint gates |
+| `ai-dlc/rules/code-standards.md` | Coding conventions, incl. Design & Maintainability and UI/Style standards |
 | `ai-dlc/rules/security.md` | Security rules |
+| `ai-dlc/guidelines/domain-glossary.md` | Canonical business terms |
+| `ai-dlc/guidelines/skill-base.md` | Reusable domain/business skills catalog |
 | `ai-dlc/guidelines/dev-setup.md` | Local setup guide |
 
 ---
