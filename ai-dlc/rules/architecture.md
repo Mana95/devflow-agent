@@ -1,66 +1,38 @@
 # Architecture Decisions
 
+The locked tech stack lives in `ai-dlc/project-config.md` (set during First-Run
+Onboarding). This file records **architectural decisions (ADRs)** made during Phase 3
+(Reasoning) — the *why* behind design choices, constraints, and open questions.
+
+Until onboarding runs and the first intent is reasoned through, this file is empty.
+
+---
+
 ## Stack Overview
-```
-┌─────────────────────────────────┐
-│  Frontend: React 18 + TypeScript │
-│  Styling:  Tailwind CSS          │
-│  State:    React Context / hooks │
-└────────────────┬────────────────┘
-                 │ HTTP / REST
-┌────────────────▼────────────────┐
-│  Backend: .NET Core 8 Web API   │
-│  Auth:    JWT Bearer            │
-│  ORM:     Entity Framework Core │
-└────────────────┬────────────────┘
-                 │
-┌────────────────▼────────────────┐
-│  Database: PostgreSQL            │
-└─────────────────────────────────┘
-```
+> Populated from `project-config.md` once onboarding is complete.
 
 ---
 
 ## Decisions Log
+> One ADR per significant architectural decision. Format:
+> ### ADR-NNN: {title}
+> - Decision:
+> - Reason:
+> - Date:
 
-### ADR-001: Frontend framework
-- Decision: React 18 + TypeScript
-- Reason: User confirmed. Industry standard. Strong ecosystem.
-- Date: Project start
-
-### ADR-002: Backend framework
-- Decision: .NET Core 8 Web API
-- Reason: User confirmed .NET Core preference.
-- Date: Project start
-
-### ADR-003: Database
-- Decision: PostgreSQL
-- Reason: Best fit for relational data with EF Core support.
-- Date: Project start
-
-### ADR-004: Authentication
-- Decision: JWT Bearer tokens
-- Reason: Stateless, works well with REST API and React SPA.
-- Date: Project start
-
-### ADR-005: Testing
-- Decision: xUnit for .NET, Vitest for React
-- Reason: Industry standard for each stack.
-- Date: Project start
+_No ADRs yet._
 
 ---
 
 ## Open Decisions
 | Topic | Options | Decision needed by |
 |-------|---------|-------------------|
-| Cloud provider | Azure / AWS / None | Before first deployment |
-| API versioning | URL path / header | Before first public release |
-| Caching layer | Redis / in-memory | When performance needed |
+| Cloud provider | Azure / AWS / GCP / None | Before first deployment |
 
 ---
 
 ## Constraints
-- No cloud provider configured yet — do not add cloud-specific code without user confirmation
-- All API endpoints must be versioned: `/api/v1/`
-- All controllers must have XML doc comments
-- No raw SQL — use EF Core only
+> Stack-specific constraints (API versioning, doc-comment rules, ORM policy, etc.)
+> are added here during Reasoning once the stack is known.
+
+_No constraints recorded yet._

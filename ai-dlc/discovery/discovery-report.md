@@ -1,7 +1,7 @@
 # Discovery Report
 
 ## Status
-Mode: PENDING (not yet run)
+Not yet run. Populated during Phase 2 (Discovery) for the current intent.
 
 ---
 
@@ -12,7 +12,7 @@ Mode: PENDING (not yet run)
 | Jira | No | — |
 | GitHub | No | — |
 | Figma | No | — |
-| Existing codebase | No | — |
+| Existing codebase | — | — |
 
 ---
 
@@ -21,7 +21,7 @@ Mode: PENDING (not yet run)
 - [ ] Mode 2 — Nothing exists, building from scratch
 
 ## Selected Mode
-> Not yet determined. Run discovery before first build session.
+> _Not yet determined._
 
 ---
 

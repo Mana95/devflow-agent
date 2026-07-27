@@ -1,5 +1,10 @@
 # Code Standards
 
+> Stack-specific sections below (C#/.NET, React/TypeScript naming, etc.) assume the
+> sample React + .NET stack. If `ai-dlc/project-config.md` records a different stack,
+> apply the equivalent idiomatic conventions for the chosen languages/frameworks; the
+> General and Design principles apply to every stack.
+
 ## General
 - All code must be readable without comments
 - No dead code — remove unused imports, variables, functions

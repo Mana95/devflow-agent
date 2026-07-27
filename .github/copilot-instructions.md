@@ -7,11 +7,9 @@ Always read this file and the backlog before suggesting any code.
 ---
 
 ## Locked Stack
-- Frontend: React 18 + TypeScript + Tailwind CSS
-- Backend: .NET Core 8 Web API
-- Database: PostgreSQL + Entity Framework Core
-- Auth: JWT Bearer tokens
-- Tests: xUnit (backend) + Vitest (frontend) + Playwright (E2E)
+The stack is not hardcoded. It is chosen during First-Run Onboarding and stored in
+`ai-dlc/project-config.md` — read that file for the locked stack. If it has
+`configured: false`, onboarding has not run; do not suggest code until it has.
 
 ---
 
@@ -24,12 +22,9 @@ Always read this file and the backlog before suggesting any code.
 ---
 
 ## Suggestions Must
-- Match the locked tech stack above
-- Include unit tests alongside implementation code, and Playwright E2E tests for user-facing flows
-- Follow the folder structure:
-  - React code → `src/frontend/`
-  - .NET code → `src/backend/`
-  - Tests → `tests/`
+- Match the locked tech stack in `ai-dlc/project-config.md`
+- Include unit tests alongside implementation code, and E2E tests for user-facing flows (frameworks per `project-config.md`)
+- Follow the folder structure appropriate to the chosen stack (see CLAUDE.md → Output Folder Structure)
 - Respect naming conventions in `ai-dlc/rules/code-standards.md`
 
 ---

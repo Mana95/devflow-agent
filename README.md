@@ -16,8 +16,8 @@ Given a Jira ticket, GitHub issue, or epic, the agent:
 2. **Discovers** existing related work across Jira / GitHub / Figma / the codebase before building anything new
 3. **Reasons** about the breakdown into bolts (smallest deployable units), checking the domain glossary and skill base so business logic stays consistent
 4. **Waits for human approval** of the plan before writing any code
-5. **Builds** one bolt at a time — writing a test plan first, then the code, then unit tests (xUnit / Vitest) and Playwright E2E tests for user-facing flows
-6. **Validates** every bolt against its acceptance criteria — automated tests (xUnit / Vitest / Playwright) are the required gate; manual browser testing is optional
+5. **Builds** one bolt at a time — writing a test plan first, then the code, then unit tests and E2E tests (using the frameworks chosen in `project-config.md`) for user-facing flows
+6. **Validates** every bolt against its acceptance criteria — automated tests are the required gate; manual browser testing is optional
 7. **Handles bugs** end-to-end — classifying severity, opening a GitHub issue, fixing on a branch, and raising a PR for review
 
 Nothing is marked done without passing validation, and no code is written before the
@@ -82,35 +82,28 @@ numbers, explicit null-safety) — see `ai-dlc/rules/harness-governance.md` and
 
 ---
 
-## Architecture
-```
-┌─────────────────────────────────┐
-│  Frontend: React 18 + TypeScript │
-│  Styling:  Tailwind CSS          │
-│  State:    React Context / hooks │
-└────────────────┬────────────────┘
-                 │ HTTP / REST
-┌────────────────▼────────────────┐
-│  Backend: .NET Core 8 Web API   │
-│  Auth:    JWT Bearer            │
-│  ORM:     Entity Framework Core │
-└────────────────┬────────────────┘
-                 │
-┌────────────────▼────────────────┐
-│  Database: PostgreSQL            │
-└─────────────────────────────────┘
-```
+## Tech Stack — chosen per project
+The stack is **not** fixed. On first run the agent asks whether you're starting a new
+project or plugging into an existing one, then either interviews you for each layer
+(frontend, backend, database, auth, styling, unit testing, E2E) or detects the stack
+from an existing codebase. Your answers are written to `ai-dlc/project-config.md`,
+which becomes the locked stack for that clone.
 
----
+| Layer | Chosen in onboarding |
+|-------|----------------------|
+| Project type | new / existing |
+| Domain | e.g. e-commerce, fintech, healthcare |
+| Frontend | e.g. React, Vue, Angular, none |
+| Backend | e.g. .NET, Node/Express, Django, Spring Boot |
+| Database | e.g. PostgreSQL, MySQL, MongoDB, none |
+| Auth | e.g. JWT, session cookies, OAuth |
+| Styling | e.g. Tailwind, CSS Modules |
+| Unit testing | e.g. xUnit, Vitest, Jest, pytest |
+| E2E testing | e.g. Playwright, Cypress, none |
+| Cloud | none until you choose a provider |
 
-## Tech Stack
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18 + TypeScript + Tailwind CSS |
-| Backend | .NET Core 8 Web API |
-| Database | PostgreSQL + Entity Framework Core |
-| Auth | JWT Bearer tokens |
-| Tests | xUnit (backend) + Vitest (frontend) + Playwright (E2E) |
+The React 18 + .NET 8 + PostgreSQL + JWT combination is the sample used in
+`ai-dlc/examples/` — it's an illustration, not a requirement.
 
 ---
 
