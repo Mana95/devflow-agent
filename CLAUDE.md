@@ -5,6 +5,53 @@ You are an AI delivery agent operating under the AI-DLC methodology.
 You do not generate code until all pre-conditions in this file are satisfied.
 You read this file at the start of every session before doing anything else.
 
+This repo is the **dev-agent brain** — a reusable harness meant to be consumed by many
+apps. It can run two ways; see Consumption Modes below.
+
+---
+
+## Consumption Modes (standalone vs. submodule brain)
+The dev-agent can be used two ways. Detect which one at session start (see Session Start
+Protocol) and resolve file paths accordingly.
+
+**Mode A — Standalone.** You are working directly inside the dev-agent repo. The repo
+root is both the *brain root* and the *app root*, so every path below is simply
+`ai-dlc/...` — nothing special to do. This is how this repo and `ai-dlc/examples/` run.
+
+**Mode B — Submodule brain.** The dev-agent is embedded inside a separate app repo as a
+git submodule at `./dev-agent/`, and the app root has a thin `CLAUDE.md` whose only real
+content is the import line `@dev-agent/CLAUDE.md`. Here there are **two roots**:
+- **Brain root** = `dev-agent/` — reusable, treated as read-only, updated with
+  `git submodule update --remote dev-agent`. Never write app data into it.
+- **App root** = the working directory (`.`) — this app's own state and code.
+
+Where each file lives:
+
+| File | Standalone | Submodule mode |
+|------|-----------|----------------|
+| `CLAUDE.md` (rules) | `./CLAUDE.md` | `dev-agent/CLAUDE.md` (imported by thin `./CLAUDE.md`) |
+| `ai-dlc/rules/code-standards.md` | app root | **brain**: `dev-agent/ai-dlc/rules/…` |
+| `ai-dlc/rules/security.md` | app root | **brain** |
+| `ai-dlc/rules/harness-governance.md` | app root | **brain** |
+| `ai-dlc/rules/infrastructure.md` | app root | **brain** |
+| `ai-dlc/intents/intent-template.md` | app root | **brain** |
+| `ai-dlc/project-config.md` | app root | **app root** |
+| `ai-dlc/ops/build/backlog.md` | app root | **app root** |
+| `ai-dlc/intents/intent-NNN-*.md` | app root | **app root** |
+| `ai-dlc/discovery/discovery-report.md` | app root | **app root** |
+| `ai-dlc/rules/architecture.md` (this app's ADRs) | app root | **app root** |
+| `ai-dlc/guidelines/domain-glossary.md` | app root | **app root** |
+| `ai-dlc/guidelines/skill-base.md` | app root | **app root** |
+| `src/`, `tests/`, app code | app root | **app root** |
+
+Rule of thumb: **reusable rules come from the brain; everything project-specific lives
+at the app root and is never written into the submodule.** Updating the brain
+(`git submodule update --remote dev-agent`) therefore never disturbs app state — that is
+exactly what lets an app pull the latest dev-agent whenever it wants.
+
+To create a new app that consumes the dev-agent this way, run `scripts/bootstrap-app.*`
+from the dev-agent (see README → "Use dev-agent as a submodule").
+
 ---
 
 ## Memory — Locked Decisions
@@ -44,12 +91,18 @@ discovery, or build work until onboarding is complete. Steps:
 ## Session Start Protocol
 At the start of EVERY session, you must:
 1. Read this file completely
-2. Read `ai-dlc/project-config.md` — if `configured: false`, run First-Run Onboarding
-   (above) before anything else and stop here until it is done
-3. Read `ai-dlc/ops/build/backlog.md` to know current bolt status
-4. Read `ai-dlc/rules/architecture.md` for architectural constraints
-5. Read `ai-dlc/rules/harness-governance.md` for agent operating rules (branching discipline, tool access, CI, lint gates)
-6. Say: "Session ready. Current bolt: [bolt name]. What would you like to do?"
+2. **Determine consumption mode** (see Consumption Modes above): if a `dev-agent/`
+   submodule directory exists at the working root, you are in **submodule mode** — read
+   reusable rule files from `dev-agent/ai-dlc/…`; otherwise **standalone** — read them
+   from `ai-dlc/…`. App state is ALWAYS at the working root (`ai-dlc/…`) in both modes.
+3. Read `ai-dlc/project-config.md` (app root) — if `configured: false`, run First-Run
+   Onboarding (above) before anything else and stop here until it is done
+4. Read `ai-dlc/ops/build/backlog.md` (app root) to know current bolt status
+5. Read `ai-dlc/rules/architecture.md` (app root) for architectural constraints
+6. Read the reusable brain rules for agent operating rules: `harness-governance.md`
+   (branching discipline, tool access, CI, lint gates) — plus `code-standards.md` and
+   `security.md` before any build — from the brain root resolved in step 2
+7. Say: "Session ready. Current bolt: [bolt name]. What would you like to do?"
    (If unconfigured, instead greet and start onboarding.)
 Do NOT skip this. Do NOT start coding without completing these steps.
 
@@ -187,9 +240,14 @@ If any check fails → stop and resolve it first.
 ---
 
 ## File Ownership
+See Consumption Modes above for whether each file is a **brain** (reusable) or
+**app-state** (per-project) file when the dev-agent is used as a submodule.
+
 | File | Purpose |
 |------|---------|
 | `CLAUDE.md` | This file — agent brain and rules (reusable across projects) |
+| `HARNESS_VERSION` | Brain version stamp; lets an app tell which dev-agent version it pins |
+| `scripts/bootstrap-app.ps1` / `.sh` | Scaffold a new app repo that consumes this brain as a submodule |
 | `ai-dlc/project-config.md` | Per-project locked stack, set during First-Run Onboarding |
 | `.cursorrules` | Same rules for Cursor |
 | `.github/copilot-instructions.md` | Same rules for GitHub Copilot |

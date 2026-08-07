@@ -18,6 +18,10 @@ dist/
 build/
 out/
 
+# ...but NOT the AI-DLC build tracker (shares the name 'build' but is tracked state)
+!ai-dlc/ops/build/
+!ai-dlc/ops/build/**
+
 # Node
 node_modules/
 npm-debug.log*
