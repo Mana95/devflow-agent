@@ -2,6 +2,66 @@
 
 An AI-assisted software delivery project governed by the AI-DLC methodology.
 
+This repo is a reusable **dev-agent brain**. Real apps live in their **own** repos and
+embed this brain as a git submodule — see the quick start below.
+
+---
+
+## Getting Started
+
+**Prerequisites:** [git](https://git-scm.com/), and [Claude Code](https://claude.com/claude-code)
+(or Cursor / GitHub Copilot). Stack-specific tools (Node, .NET, etc.) are installed later,
+after onboarding picks your stack.
+
+There are two ways to use the dev-agent:
+
+**A. Recommended — build a real app in its own repo** (dev-agent embedded as a submodule):
+follow the [Quick Start](#quick-start--create-a-new-app) below. Your app and the agent stay
+as separate repositories, and the app pulls agent updates on demand.
+
+**B. Standalone — try it inside this repo** (good for a quick look or the examples):
+
+```bash
+git clone https://github.com/Mana95/devflow-agent.git
+cd devflow-agent
+# open the folder with Claude Code — it reads CLAUDE.md and runs First-Run Onboarding
+```
+
+On the first session the agent runs **First-Run Onboarding**: it asks new-vs-existing,
+interviews you for the stack, writes `ai-dlc/project-config.md`, then greets you with the
+current bolt. From there, describe a feature to kick off Phase 0 → build.
+
+---
+
+## Quick Start — create a new app
+
+Run from the dev-agent repo (uses this repo's URL; swap it if you forked):
+
+```powershell
+./scripts/bootstrap-app.ps1 -AppName sales-app -DevAgentUrl https://github.com/Mana95/devflow-agent.git
+```
+
+```bash
+scripts/bootstrap-app.sh sales-app https://github.com/Mana95/devflow-agent.git
+```
+
+Then:
+
+1. `cd ../sales-app`
+2. Open it with Claude Code — it runs **First-Run Onboarding** (stack interview) and locks
+   `ai-dlc/project-config.md`.
+3. Describe your first feature → the agent brainstorms, writes an intent, plans bolts,
+   waits for your approval, then builds.
+4. Create the `sales-app` GitHub repo and push: `git remote add origin <url> && git push -u origin main`.
+
+Pull later dev-agent improvements into the app anytime:
+
+```bash
+git submodule update --remote dev-agent && git add dev-agent && git commit -m "chore: update dev-agent brain"
+```
+
+Full details: [Use dev-agent as a submodule](#use-dev-agent-as-a-submodule-recommended-for-real-apps).
+
 ---
 
 ## What This Is
@@ -164,10 +224,14 @@ git clone <app-url> && cd <app> && git submodule update --init --recursive
 
 ## How to Work in This Project
 
+> These steps run **inside your app repo** (where the dev-agent is a submodule), not in
+> the dev-agent repo itself. In an app, `ai-dlc/…` paths refer to the app root; reusable
+> rules are read from `dev-agent/…`. See CLAUDE.md → "Consumption Modes".
+
 ### Starting a session
-- Claude Code → reads `CLAUDE.md` automatically
-- Cursor → reads `.cursorrules` automatically
-- GitHub Copilot → reads `.github/copilot-instructions.md` automatically
+- Claude Code → reads the app's thin `CLAUDE.md`, which imports `@dev-agent/CLAUDE.md`
+- Cursor / GitHub Copilot → their thin pointer files reference the same brain in `dev-agent/`
+- On the very first session the agent runs **First-Run Onboarding** and locks the stack
 
 ### Adding a new feature
 1. Describe the feature/epic to the agent (free text, or a ticket link) — it will
@@ -178,7 +242,7 @@ git clone <app-url> && cd <app> && git submodule update --init --recursive
 4. Agent presents plan — confirm to start build
 
 ### Checking progress
-- Open `ai-dlc/ops/build/backlog.md`
+- Open `ai-dlc/ops/build/backlog.md` (in the app root)
 
 ### When a bug is found
 - Agent automatically creates GitHub issue + fix branch + PR
@@ -187,19 +251,28 @@ git clone <app-url> && cd <app> && git submodule update --init --recursive
 ---
 
 ## Key Files
-| File | Purpose |
-|------|---------|
-| `CLAUDE.md` | Agent brain — rules for Claude Code |
-| `.cursorrules` | Agent rules for Cursor |
-| `.github/copilot-instructions.md` | Agent rules for GitHub Copilot |
-| `ai-dlc/ops/build/backlog.md` | Live bolt tracker |
-| `ai-dlc/rules/architecture.md` | Architecture decisions |
-| `ai-dlc/rules/harness-governance.md` | Agent operating rules — branching discipline, external tool access, CI, lint gates |
-| `ai-dlc/rules/code-standards.md` | Coding conventions, incl. Design & Maintainability and UI/Style standards |
-| `ai-dlc/rules/security.md` | Security rules |
-| `ai-dlc/guidelines/domain-glossary.md` | Canonical business terms |
-| `ai-dlc/guidelines/skill-base.md` | Reusable domain/business skills catalog |
-| `ai-dlc/guidelines/dev-setup.md` | Local setup guide |
+"Brain" = reusable, lives in the dev-agent (the submodule for an app). "App state" =
+per-project, lives at the app root and is never written into the submodule.
+
+| File | Class | Purpose |
+|------|-------|---------|
+| `CLAUDE.md` | brain | Agent brain — rules for Claude Code (an app has a thin `CLAUDE.md` importing this) |
+| `HARNESS_VERSION` | brain | Brain version stamp — which dev-agent version an app pins |
+| `scripts/bootstrap-app.ps1` / `.sh` | brain | Scaffold a new app repo that consumes this brain as a submodule |
+| `.cursorrules` | brain | Agent rules for Cursor |
+| `.github/copilot-instructions.md` | brain | Agent rules for GitHub Copilot |
+| `ai-dlc/rules/harness-governance.md` | brain | Agent operating rules — branching discipline, external tool access, CI, lint gates |
+| `ai-dlc/rules/code-standards.md` | brain | Coding conventions, incl. Design & Maintainability and UI/Style standards |
+| `ai-dlc/rules/security.md` | brain | Security rules |
+| `ai-dlc/rules/infrastructure.md` | brain | Infra/deployment placeholder until a cloud provider is chosen |
+| `ai-dlc/intents/intent-template.md` | brain | Template copied when creating an intent |
+| `ai-dlc/project-config.md` | app state | Locked stack for this app (set during onboarding) |
+| `ai-dlc/ops/build/backlog.md` | app state | Live bolt tracker |
+| `ai-dlc/rules/architecture.md` | app state | This app's architecture decisions (ADRs) |
+| `ai-dlc/guidelines/domain-glossary.md` | app state | Canonical business terms |
+| `ai-dlc/guidelines/skill-base.md` | app state | Reusable domain/business skills catalog |
+| `ai-dlc/discovery/discovery-report.md` | app state | Discovery findings |
+| `ai-dlc/guidelines/dev-setup.md` | brain | Local setup guide |
 
 ---
 
