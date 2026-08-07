@@ -107,6 +107,61 @@ The React 18 + .NET 8 + PostgreSQL + JWT combination is the sample used in
 
 ---
 
+## Use dev-agent as a submodule (recommended for real apps)
+
+This repo is a reusable **dev-agent brain**. For a real app, don't build inside this
+repo — create the app as its **own repository** and embed the dev-agent inside it as a
+git submodule. That keeps the app and the agent as two independent repos, while letting
+the app pull the latest agent whenever it wants.
+
+```
+Workspace/
+├── dev-agent/          ← this repo (the brain: CLAUDE.md, rules, ai-dlc/ templates)
+└── sales-app/          ← your app, its OWN repo → pushed to the sales-app repository
+    ├── .git
+    ├── src/, package.json
+    ├── CLAUDE.md        ← thin wrapper: just `@dev-agent/CLAUDE.md`
+    ├── ai-dlc/          ← THIS app's state (project-config, intents, backlog, discovery)
+    └── dev-agent/       ← git SUBMODULE → points at the dev-agent repo
+```
+
+**Create a new app** (run from the dev-agent repo):
+
+```bash
+scripts/bootstrap-app.sh sales-app https://github.com/<you>/dev-agent.git
+```
+
+```powershell
+./scripts/bootstrap-app.ps1 -AppName sales-app -DevAgentUrl https://github.com/<you>/dev-agent.git
+```
+
+This scaffolds the app repo, adds the submodule, writes the thin `CLAUDE.md`, and seeds
+the app-root `ai-dlc/` state from the brain templates. Then open the app with Claude Code
+and run First-Run Onboarding to lock its stack.
+
+**Pull the latest dev-agent into an app** (run from inside the app repo):
+
+```bash
+git submodule update --remote dev-agent
+git add dev-agent && git commit -m "chore: update dev-agent brain"
+```
+
+The submodule is pinned to a specific dev-agent commit, so updates are **deliberate**:
+an app keeps running the version it pinned until you explicitly run the command above.
+App code and app-specific `ai-dlc/` state are never touched. Reusable rules
+(`code-standards`, `security`, `harness-governance`, `infrastructure`) live only in the
+submodule; per-app files (`project-config.md`, intents, backlog, discovery, ADRs,
+glossary, skill-base) live at the app root. See CLAUDE.md → "Consumption Modes" for the
+full file map.
+
+**Clone an app that already uses the submodule:**
+
+```bash
+git clone <app-url> && cd <app> && git submodule update --init --recursive
+```
+
+---
+
 ## How to Work in This Project
 
 ### Starting a session
